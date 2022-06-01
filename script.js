@@ -1,5 +1,7 @@
 const colorTitle = document.getElementById('rgb-color');
 const colorGuess = document.getElementById('color-guess');
+const newGame = document.getElementById('reset-game');
+const score = document.getElementById('score');
 let colorBall = document.getElementsByClassName('ball');
 
 
@@ -11,7 +13,7 @@ function createRandomColor(){
   return rgb;
 }
 
-function createColorGuess(amount){
+function createDivColorGuess(amount){
   for (let index = 0; index < amount; index += 1) {
     let createDiv = document.createElement('div');
     createDiv.className = 'ball';
@@ -20,21 +22,29 @@ function createColorGuess(amount){
   }
 }
 
-function createAnswer(){
-  let p = document.createElement('p');
-  p.id = 'answer';
-  p.innerText = 'Escolha uma cor';
-  colorGuess.appendChild(p);
+function genereteColors(){
+  let color = document.getElementsByClassName('ball');
+  for(let index = 0; index < color.length; index += 1) {
+    color[index].style.backgroundColor = 'rgb'+createRandomColor();
+  }
+  
 }
 
 function selectColor(event){
   let click = event.target.style.backgroundColor;
   let answer = document.getElementById('answer');
-  console.log(click == colorTitle.innerText);
+
   if(click == colorTitle.innerText) {
     answer.innerText = 'Acertou!';
+    let count = parseInt(score.innerText);
+    count += 3;
+    score.innerText = count;
+    genereteColors();
+    verifyColor();
   }else {
     answer.innerText = 'Errou! Tente novamente!';
+    genereteColors();
+    verifyColor();
   }
 }
 
@@ -47,11 +57,17 @@ function verifyColor() {
       ball.style.backgroundColor = colorTitle.innerText;
     }    
   }
-  console.log(trueColor);
+}
+
+function resetGame() {
+  let answer = document.getElementById('answer');
+  answer.innerText = 'Escolha uma cor';
+  genereteColors();
+  verifyColor();
 }
 
 createRandomColor();
-createColorGuess(6);
-createAnswer();
+createDivColorGuess(6);
 colorGuess.addEventListener('click', selectColor);
 verifyColor();
+newGame.addEventListener('click', resetGame);
